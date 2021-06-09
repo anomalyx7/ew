@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instant Messenger</title>
+</head>
+<body>
+    <h1>Instant Messenger</h1>
+    <h3>Select Channel to Listen</h3>
+    <h4>{{ notice }} </h4>
+    <label>Your username: {{ username }} </label>
+    <form action="/InstantMessenger/Chat">
+        <label>Enter room ID: </label>
+        <input type="text" name = "room">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <h3>Select Channel to Subscribe</h3>
+    <h4>{{ notice2 }} </h4>
+    <form action="/InstantMessenger/Subscribe">
+        <label>Enter room ID: </label>
+        <input type="text" name = "sroom">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <h3>Select Channel to Unsubscribe</h3>
+    <h4>{{ notice3 }} </h4>
+<form action="/InstantMessenger/Unsubscribe">
+        <label>Enter room ID: </label>
+        <input type="text" name = "uroom">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

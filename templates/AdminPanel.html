@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AJAX Example</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<script>
+
+	$(document).ready(function() {
+
+		$('#CreateUserForm').on('submit', function(event) {
+
+			$.ajax({
+				data : {
+					usernameC : $('#usernameC').val(),
+					passwordC : $('#passwordC').val()
+				},
+				type : 'POST',
+				url : '/admin/create_user'
+			})
+			.done(function(data) {
+
+				if (data.error) {
+					$("#result").text(data.error);
+				}
+				else {
+					$('#result').text(data.success);
+				}
+			});
+			event.preventDefault();
+		});
+	});
+	</script>
+
+	<script>
+
+	$(document).ready(function() {
+
+		$('#ChangeUserPasswordForm').on('submit', function(event) {
+
+			$.ajax({
+				data : {
+					usernameCP : $('#usernameCP').val(),
+					passwordCP : $('#passwordCP').val()
+				},
+				type : 'PUT',
+				url : '/admin/change_password'
+			})
+			.done(function(data) {
+
+				if (data.error) {
+					$("#resultCP").text(data.error);
+				}
+				else {
+					$('#resultCP').text(data.success);
+				}
+			});
+			event.preventDefault();
+		});
+	});
+	</script>
+
+	<script>
+
+		$(document).ready(function() {
+
+			$('#DeleteUserForm').on('submit', function(event) {
+
+				$.ajax({
+					data : {
+						usernameD : $('#usernameD').val()
+					},
+					type : 'DELETE',
+					url : '/admin/remove_user/'
+				})
+				.done(function(data) {
+
+					if (data.error) {
+						$("#resultD").text(data.error);
+					}
+					else {
+						$('#resultD').text(data.success);
+					}
+				});
+				event.preventDefault();
+			});
+		});
+
+	</script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#CreateGroupForm').on('submit', function(event) {
+
+				$.ajax({
+					data : {
+						groupName : $('#groupName').val(),
+						groupMembers : $('#groupM').val()
+
+					},
+					type : 'POST',
+					url : '/admin/create_group/'
+				})
+				.done(function(data) {
+
+					if (data.error) {
+						$("#resultG").text(data.error);
+					}
+					else {
+						$('#resultG').text(data.success);
+					}
+				});
+				event.preventDefault();
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#CreateChatForm').on('submit', function(event) {
+
+				$.ajax({
+					data : {
+						chatName: $('#chatName').val()
+					},
+					type : 'POST',
+					url : '/admin/create_chat'
+				})
+				.done(function(data) {
+
+					if (data.error) {
+						$("#resultChat").text(data.error);
+					}
+					else {
+						$('#resultChat').text(data.success);
+					}
+				});
+				event.preventDefault();
+			});
+		});
+	</script>
+
+	<style>
+		body {font-family: Arial, Helvetica, sans-serif;}
+
+		input[type=text], input[type=password] {
+		  width: 100%;
+		  padding: 12px 20px;
+		  margin: 8px 0;
+		  display: inline-block;
+		  border: 1px solid #ccc;
+		  box-sizing: border-box;
+		}
+
+
+
+		input[type=submit]{
+		  background-color: #04AA6D;
+		  color: white;
+		  padding: 14px 20px;
+		  margin: 8px 0;
+		  border: none;
+		  cursor: pointer;
+		  width: 100%;
+		}
+
+		input[type=submit]:hover{
+		  opacity: 0.8;
+		}
+
+		button {
+		  background-color: #04AA6D;
+		  color: white;
+		  padding: 14px 20px;
+		  margin: 8px 0;
+		  border: none;
+		  cursor: pointer;
+		  width: 100%;
+		}
+
+		button:hover {
+		  opacity: 0.8;
+		}
+
+		.container{
+			padding: 16px;
+			border: 3px solid #f1f1f1;
+		}
+	</style>
+</head>
+<body>
+
+<div class="container">
+	<h1>CREATE USER</h1>
+
+	<form id="CreateUserForm">
+
+		<label for="usernameC">Username</label>
+	    <input type="text" id="usernameC" placeholder="Username">
+
+		<label for="passwordC">Name</label>
+	    <input type="password" id="passwordC" placeholder="Password">
+
+		<input type="submit" value="Create" name="createUserBtn">
+	</form>
+	<p id=result></p>
+</div>
+
+<div class="container">
+
+	<h1>CHANGE USER PASSWORD</h1>
+
+	<form id="ChangeUserPasswordForm">
+
+		<label for="usernameCP">Username</label>
+	    <input type="text" id="usernameCP" placeholder="Username">
+
+		<label for="passwordCP">Password</label>
+	    <input type="password" id="passwordCP" placeholder="Password">
+
+		<input type="submit" value="Update" name="changePassBtn">
+	</form>
+	<p id=resultCP></p>
+</div>
+
+<div class="container">
+
+	<h1>DELETE USER</h1>
+
+	<form id="DeleteUserForm">
+
+		<label for="usernameD">Username</label>
+		<input type="text" id="usernameD" placeholder="Username">
+
+		<input type="submit" value="Delete" name="deleteUserBtn">
+	</form>
+	<p id="resultD"></p>
+
+</div>
+
+<div class="container">
+	<h1>CREATE GROUP</h1>
+	<form id="CreateGroupForm">
+
+		<label for="groupName">Name</label>
+		<input type="text" id="groupName" placeholder="Group name">
+
+		<label for="groupM">Members</label>
+		<input type="text" id="groupM" placeholder="Group members">
+
+		<input type="submit" value="Create" name="deleteUserBtn">
+
+	</form>
+	<p id="resultG"></p>
+
+</div>
+
+<div class="container">
+	<h1>CREATE CHAT ROOM</h1>
+	<form method="POST" id="CreateChatForm">
+
+		<label for="chatName">Name</label>
+		<input type="text" id="chatName" placeholder="Chat name">
+
+		<input type="submit" value="Create" name="createChatBtn">
+
+	</form>
+	<p id="resultChat"></p>
+
+</div>
+
+</body>
+</html>

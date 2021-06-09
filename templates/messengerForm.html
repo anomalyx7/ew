@@ -1,0 +1,279 @@
+<html>
+<head>
+    <style>
+
+        .messageBoxSent, .messageBoxReceived{
+            clear:left;
+            border:solid 1px;
+            margin: 2em;
+            padding:.5em;
+            overflow: auto;
+            overflow-wrap: break-word;
+            border-radius: 25px;
+        }
+
+        .messageBoxSent{
+            text-align: right;
+            background-color: #0099ff;
+        }
+
+        .messageBoxReceived{
+            text-align: left;
+            background-color: #e4e6eb;
+
+        }
+
+        .sendButton{
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 0px 0px;
+            margin: 0px 0;
+            border: none;
+            cursor: pointer;
+            width: 3%;
+            height: 100%
+        }
+
+        input[type=text] {
+            width: 96%;
+            height: 100%;
+            padding: 0px 0px;
+            margin: 0px 0;
+            display: inline-block;
+            border: 0px solid #ccc;
+            box-sizing: border-box;
+            background-color: #d3d3d3 ;
+        }
+
+        .searchPeople {
+            width: 100%;
+            height: 8%;
+            padding: 0px 0px;
+            margin: 0px 0;
+            display: inline-block;
+            border: 0px solid #ccc;
+            box-sizing: border-box;
+            background-color: #d3d3d3 ;
+        }
+        #currentPerson {
+            height: 10%;
+            background-color: yellow;
+        }
+
+        .battom {
+            background-color: white;
+            font-size: 15px;
+            font-weight: bold;
+            color: black;
+            padding: 14px 20px;
+            margin: 1px 0;
+            border: none;
+            border-bottom: 1px solid black;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .battom:hover {
+            color: gray;
+        }
+
+        #people {
+            width: 20%;
+            float: left;
+            height: 100%;
+            overflow: auto;
+            background-color: white;
+        }
+
+        #person {
+            width: 20%;
+            float: left;
+            height: 20px;
+            background-color: white;
+        }
+
+        #messages {
+            width: 80%;
+            float: left;
+            height: 83%;
+            overflow: auto;
+            background-color: white;
+        }
+
+        #inputText
+        {
+            width: 80%;
+            float: left;
+            height: 7%;
+            overflow: auto;
+            background-color: white;
+        }
+
+        #clear {
+            clear: both;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+			$('#searchPeopleForm').on('submit', function(event) {
+
+				$.ajax({
+					data : {
+						usernameS : $('#searchPeopleInput').val()
+					},
+					type : 'POST',
+					url : '/messenger/searchPerson'
+				})
+				.done(function(data) {
+
+					if(data.nonexistent){
+					    alert("User does not exist!");
+					}
+					else if(data.alreadyadded){
+					    alert("User is already on your contact list!")
+					}
+					else{
+					    document.write(data);
+					}
+				});
+				event.preventDefault();
+			});
+		});
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+
+		$('#sendMessageForm').on('submit', function(event) {
+
+			$.ajax({
+				data : {
+					messageSend : $('#messageSend').val(),
+                    to_send : $('#to_send').val(),
+
+				},
+				type : 'PUT',
+				url : '/Messenger/send_message'
+			})
+			.done(function(data) {
+
+                var mydiv = document.getElementById("messages");
+				var mBox = document.createElement("div");
+				mBox.className = "messageBoxSent"
+				mBox.setAttribute("id", data.nmessages);
+				mBox.innerHTML = data.message;
+
+				mydiv.appendChild(mBox);
+
+			});
+			event.preventDefault();
+		});
+	});
+    </script>
+
+    <script>
+
+        function mmmmm(id)
+        {
+            $.ajax({
+				data : {
+					msgNumber : id,
+                    sent_to : $('#to_send').val(),
+
+				},
+				type : 'DELETE',
+				url : '/messenger/deletemsg'
+			})
+			.done(function(data) {
+
+
+
+			});
+        }
+    </script>
+
+
+</head>
+
+<body>
+
+<div id="people">
+    <form id="searchPeopleForm">
+        <input class="searchPeople" id="searchPeopleInput" name="searchPeople">
+    </form>
+
+
+    {% for person in people %}
+        <form action="http://localhost:5000/Messenger/c/{{person}}">
+            {% if person in unreadMessages %}
+                <input class="battom" style="background-color:blue" type="submit" name="personButton" value={{person}}>
+            {% else %}
+                <input class="battom" type="submit" name="personButton" value={{person}}>
+            {% endif %}
+        </form>
+    {% endfor %}
+    <input type="hidden" name="selectedConvo" value="">
+
+
+</div>
+
+
+
+
+
+    <div id="currentPerson">
+        <p>{{nMessages}}</p>
+    </div>
+
+
+    <div id="messages">
+        <form id="deleteMsgForm">
+        <script>
+            var i;
+            var msgs = {{ mensagens | tojson }};
+            var divBox = document.getElementById("messages")
+
+            for(i = 0; i < msgs.length; i++){
+
+                var newmsg = document.createElement("div");
+                var newx = document.createElement("button")
+
+                if(msgs[i][0] == "Sent")
+                {
+                        newmsg.className = "messageBoxSent";
+                        newmsg.setAttribute("id", i.toString());
+                        newx.setAttribute("id", i.toString());
+                        newx.setAttribute('onclick','mmmmm(this.getAttribute("id"));');
+                }
+                else
+                {
+                        newmsg.className = "messageBoxReceived";
+                }
+                newmsg.innerHTML = msgs[i][1];
+                newmsg.appendChild(newx);
+                messages.appendChild(newmsg);
+            }
+        </script>
+        </form>
+    </div>
+
+        <div id="inputText">
+            <form id="sendMessageForm">
+                <input type="hidden" name="to_send" id="to_send" value="{{currentPerson}}">
+                <input type="text" placeholder="Enter message" name="message" id="messageSend" required>
+                <input type="submit" id="sendBtn" value="Send" class="sendButton">
+            </form>
+
+        </div>
+
+        <div id="clear"></div>
+</body>
+
+</html>
